@@ -6,9 +6,10 @@ import pandas as pd
 from torchvision import transforms
 from PIL import Image
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 # Charger les modèles
 logistic_model = pickle.load(open("models/xgboost_model.pkl", "rb"))
 deit_model = torch.load("models/deit_model.pth", map_location=torch.device('cpu'))
