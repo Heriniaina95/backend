@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
-import pickle
 import torch
 from torchvision import transforms
 from PIL import Image
@@ -9,14 +8,18 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})  # Permet à toutes les requêtes d'être acceptées
 
 # Charger les modèles
-logistic_model = pickle.load(open("models/xgboost_model.pkl", "rb"))
-deit_model = torch.load("models/deit_model.pth", map_location=torch.device('cpu'))
-label_encoders = joblib.load('./models/label_encoders.joblib')
+try:
+    logistic_model = joblib.load("models/logistic_model.joblib")
+    deit_model = torch.load("models/deit_model.pth", map_location=torch.device('cpu'))
+    label_encoders = joblib.load('models/label_encoders.joblib')
+except Exception as e:
+    print(f"Erreur lors du chargement des modèles: {e}")
+    exit(1)
 
-data = pd.read_csv("data/donnees_augmentees.csv")
+data = pd.read_csv("data/nouveau_donnee_maladie.csv")
 unique_countries = data['pays'].unique().tolist()
 
 # Création du dossier d'uploads
@@ -73,59 +76,61 @@ def get_countries_by_continent():
     else:
         return jsonify({"error": "Continent non valide"}), 400
 
-@app.route("/predict-environment-survey", methods=["POST"])
-def predict_environment_survey():
-    data = request.get_json()
-
-    # Charger le fichier CSV
-    df = pd.read_csv("./data/tableau_enquete_environnements.csv")
-
-    # Filtrer le DataFrame pour trouver la ligne correspondante
-    filtered_df = df[
-        (df["Type de Logement"] == data.get("Type de Logement")) &
-        (df["Proximité de l'Eau"] == data.get("Proximité de l'Eau")) &
-        (df["Environnement Naturel"] == data.get("Environnement Naturel")) &
-        (df["Conditions Sanitaires"] == data.get("Conditions Sanitaires")) &
-        (df["Présence d'Animaux"] == data.get("Présence d'Animaux"))
-    ]
-
-    if not filtered_df.empty:
-        predicted_environment = filtered_df["Environnement"].values[0]
-        return jsonify({'predicted_environment': predicted_environment})
-    else:
-        return jsonify({'error': 'Aucun environnement trouvé pour ces réponses'}), 400
-
 @app.route("/predict-disease", methods=["POST"])
 def predict_disease():
-    # Récupérer les symptômes depuis l'endpoint /symptoms
-    symptoms_data = get_symptoms().json.get("symptoms", {})
-    all_symptoms = [item for sublist in symptoms_data.values() for item in sublist]  # Aplatir la liste
+    try:
+        received_data = request.json
+        symptoms = received_data.get("symptoms", [])
+        country = received_data.get("country", "")
+        environment_survey = received_data.get("environment_survey", {})
 
-    # Obtenir les données envoyées par le client
-    received_data = request.json
-    symptoms = received_data.get("symptoms", [])
-    country = received_data.get("country", "")
-    environment_data = received_data.get("environment_data", {})
+        print(f"Received symptoms: {symptoms}")
+        print(f"Received country: {country}")
+        print(f"Received environment survey: {environment_survey}")
 
-    # Vérifications
-    if not symptoms or not country or not environment_data:
-        return jsonify({"error": "Veuillez fournir les symptômes, le pays et l'environnement"}), 400
+        # Vérifications
+        if not symptoms or not country or not environment_survey:
+            return jsonify({"error": "Veuillez fournir les symptômes, le pays et les réponses du questionnaire environnemental"}), 400
 
-    if country not in unique_countries:
-        return jsonify({"error": "Pays sélectionné non valide"}), 400
+        # Récupérer les symptômes et les pays valides
+        symptoms_response = get_symptoms()
+        countries_response = get_countries()
 
-    for symptom in symptoms:
-        if symptom not in all_symptoms:
-            return jsonify({"error": f"Symptôme '{symptom}' non valide"}), 400
+        symptoms_data = symptoms_response.json.get("symptoms", {})
+        all_symptoms = [item for sublist in symptoms_data.values() for item in sublist]
+        unique_countries = countries_response.json.get("countries", [])
 
-    # Récupérer l'environnement prédit à partir de l'endpoint /predict-environment-survey
-    predicted_environment = predict_environment_survey().json.get("predicted_environment", "")
+        if country not in unique_countries:
+            return jsonify({"error": "Pays sélectionné non valide"}), 400
 
-    # Construction des features
-    features = symptoms + [country, predicted_environment]
-    prediction = logistic_model.predict([features])[0]
+        for symptom in symptoms:
+            if symptom not in all_symptoms:
+                return jsonify({"error": f"Symptôme '{symptom}' non valide"}), 400
 
-    return jsonify({"predicted_disease": prediction})
+        # Construction des features
+        features = [
+            environment_survey.get("Type de Logement", ""),
+            environment_survey.get("Proximité de l'Eau", ""),
+            environment_survey.get("Environnement Naturel", ""),
+            environment_survey.get("Conditions Sanitaires", ""),
+            environment_survey.get("Présence d'Animaux", ""),
+            country,
+            *symptoms
+        ]
+
+        # Transformer les caractéristiques en utilisant les LabelEncoders
+        encoded_features = []
+        for i, feature in enumerate(features):
+            col_name = list(label_encoders.keys())[i]
+            encoder = label_encoders[col_name]
+            encoded_features.append(encoder.transform([feature])[0])
+
+        prediction = logistic_model.predict([encoded_features])[0]
+
+        return jsonify({"predicted_disease": prediction})
+    except Exception as e:
+        print("Error in predict_disease:", str(e))
+        return jsonify({"error": "Une erreur est survenue lors de la prédiction de la maladie"}), 500
 
 @app.route("/upload-image", methods=["POST"])
 def upload_image():
@@ -139,47 +144,6 @@ def upload_image():
         prediction = deit_model(image_tensor)
     predicted_label = torch.argmax(prediction, dim=1).item()
     return jsonify({"image_prediction": predicted_label})
-
-@app.route("/predict-combined", methods=["POST"])
-def predict_combined():
-    if 'file' not in request.files:
-        return jsonify({"error": "Aucune image envoyée"}), 400
-
-    file = request.files['file']
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    file.save(filepath)
-
-    image_tensor = transform_image(filepath)
-    with torch.no_grad():
-        deit_prediction = deit_model(image_tensor)
-    predicted_label = torch.argmax(deit_prediction, dim=1).item()
-
-    symptoms_data = get_symptoms().json.get("symptoms", {})
-    unique_countries = get_countries().json.get("countries", [])
-    environment_response = predict_environment_survey()
-
-    symptoms = request.json.get("symptoms", [])
-    country = request.json.get("country", "")
-
-    if not symptoms or not country or not environment_response:
-        return jsonify({"error": "Veuillez fournir les symptômes, le pays et l'environnement"}), 400
-
-    if country not in unique_countries:
-        return jsonify({"error": "Pays sélectionné non valide"}), 400
-
-    valid_symptoms = []
-    for symptom in symptoms:
-        if any(symptom in values for values in symptoms_data.values()):
-            valid_symptoms.append(symptom)
-
-    if not valid_symptoms:
-        return jsonify({"error": "Aucun symptôme valide fourni"}), 400
-
-    predicted_environment = environment_response.json.get("predicted_environment", "")
-    features = valid_symptoms + [country, predicted_environment]
-    disease_prediction = logistic_model.predict([features])[0]
-
-    return jsonify({"predicted_disease": disease_prediction, "image_prediction": predicted_label})
 
 if __name__ == '__main__':
     app.run(debug=True)
