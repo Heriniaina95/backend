@@ -32,93 +32,108 @@ classes = [
 disease_explanation = {
     "data_final_brucellose": {
         "name": "Brucellose",
-        "description": "La brucellose est une infection bactérienne transmise par les animaux. Elle peut provoquer de la fièvre, des douleurs musculaires et des sueurs.",
+        "description": "La brucellose est une infection bactérienne transmise par les animaux.",
+        "symptoms": "Fièvre, douleurs musculaires, sueurs, fatigue, perte d’appétit.",
         "countries": "Présente en Afrique, Asie, Amérique du Sud.",
-        "favorableEnvironment": "Présente dans les zones rurales avec un contact avec le bétail et les animaux d'élevage."
+        "favorableEnvironment": "Zones rurales avec contact avec le bétail et les animaux d'élevage."
     },
     "data_final_chikungunya": {
         "name": "Chikungunya",
-        "description": "Le chikungunya est une maladie virale transmise par les moustiques, caractérisée par de la fièvre et des douleurs articulaires.",
-        "countries": "Présente principalement dans les régions tropicales comme l'Afrique, l'Asie et les Caraïbes.",
-        "favorableEnvironment": "Les zones tropicales humides et les environnements où les moustiques sont nombreux."
+        "description": "Le chikungunya est une maladie virale transmise par les moustiques.",
+        "symptoms": "Fièvre élevée, douleurs articulaires intenses, éruptions cutanées, maux de tête.",
+        "countries": "Afrique, Asie, Caraïbes.",
+        "favorableEnvironment": "Zones tropicales humides."
     },
     "data_final_dengue": {
         "name": "Dengue",
-        "description": "La dengue est une infection virale transmise par les moustiques. Elle peut provoquer de la fièvre élevée et des douleurs musculaires.",
-        "countries": "Présente en Asie, Afrique, Amérique Latine.",
-        "favorableEnvironment": "Zones tropicales et subtropicales, où les moustiques vectoriels sont présents."
+        "description": "La dengue est une infection virale transmise par les moustiques.",
+        "symptoms": "Fièvre élevée, douleurs musculaires, éruptions cutanées, fatigue.",
+        "countries": "Asie, Afrique, Amérique Latine.",
+        "favorableEnvironment": "Zones tropicales et subtropicales."
     },
     "data_final_fievrehemoragique": {
         "name": "Fièvre hémorragique",
-        "description": "Une maladie virale souvent grave, pouvant entraîner des saignements, des défaillances organiques et la mort.",
-        "countries": "Présente en Afrique et en Asie.",
-        "favorableEnvironment": "Zones tropicales où les virus sont transmis par des hôtes animaux ou des moustiques."
+        "description": "Maladie virale pouvant entraîner des saignements graves et des défaillances organiques.",
+        "symptoms": "Fièvre, fatigue, douleurs musculaires, saignements, choc.",
+        "countries": "Afrique, Asie.",
+        "favorableEnvironment": "Zones tropicales avec transmission animale ou par moustiques."
     },
     "data_final_fievrejaune": {
         "name": "Fièvre jaune",
-        "description": "La fièvre jaune est une infection virale transmise par les moustiques, pouvant entraîner des symptômes graves comme des douleurs abdominales et des vomissements.",
-        "countries": "Présente en Afrique subsaharienne et en Amérique latine.",
-        "favorableEnvironment": "Les zones tropicales où les moustiques vectoriels sont présents."
+        "description": "Infection virale transmise par les moustiques.",
+        "symptoms": "Fièvre, frissons, douleurs musculaires, nausées, jaunisse.",
+        "countries": "Afrique subsaharienne, Amérique latine.",
+        "favorableEnvironment": "Zones tropicales avec moustiques."
     },
     "data_final_filariose": {
         "name": "Filariose",
-        "description": "La filariose est une infection parasitaire provoquée par des vers filaires, souvent transmise par les moustiques.",
-        "countries": "Présente dans les régions tropicales et subtropicales.",
-        "favorableEnvironment": "Les zones où les moustiques transmettent les vers, généralement en Asie, Afrique et Amérique Latine."
+        "description": "Infection parasitaire causée par des vers filaires.",
+        "symptoms": "Inflammation, gonflement des membres (éléphantiasis), fièvre.",
+        "countries": "Régions tropicales et subtropicales.",
+        "favorableEnvironment": "Zones avec moustiques porteurs de filaires."
     },
     "data_final_leishmaniose": {
         "name": "Leishmaniose",
-        "description": "Maladie parasitaire transmise par les phlébotomes (mouches des sables), qui peut affecter la peau ou les organes internes.",
-        "countries": "Présente en Afrique, Asie, Amérique latine.",
-        "favorableEnvironment": "Les régions désertiques et semi-désertiques, où les phlébotomes vivent."
+        "description": "Maladie parasitaire transmise par les phlébotomes.",
+        "symptoms": "Ulcères cutanés, fièvre, perte de poids, atteinte des organes internes.",
+        "countries": "Afrique, Asie, Amérique latine.",
+        "favorableEnvironment": "Régions désertiques et semi-désertiques."
     },
     "data_final_onchocercose": {
         "name": "Onchocercose",
-        "description": "Maladie parasitaire causée par des vers, transmise par les mouches noires, pouvant entraîner la cécité.",
-        "countries": "Présente en Afrique subsaharienne.",
-        "favorableEnvironment": "Les zones riveraines où les mouches noires sont présentes."
+        "description": "Maladie parasitaire causée par des vers.",
+        "symptoms": "Démangeaisons sévères, lésions cutanées, cécité progressive.",
+        "countries": "Afrique subsaharienne.",
+        "favorableEnvironment": "Zones riveraines avec mouches noires."
     },
     "data_final_pest": {
         "name": "Peste",
-        "description": "Maladie bactérienne transmise par les puces, pouvant entraîner des symptômes graves comme de la fièvre et des ganglions enflés.",
-        "countries": "Présente principalement en Asie, Afrique et Amérique.",
-        "favorableEnvironment": "Zones de contact avec des rongeurs et des puces."
+        "description": "Maladie bactérienne transmise par les puces.",
+        "symptoms": "Fièvre soudaine, ganglions enflés, frissons, fatigue.",
+        "countries": "Asie, Afrique, Amérique.",
+        "favorableEnvironment": "Zones où vivent des rongeurs infectés."
     },
     "data_final_rouge": {
         "name": "Rougeole",
-        "description": "La rougeole est une infection virale qui provoque une éruption cutanée et des symptômes respiratoires.",
-        "countries": "Présente dans de nombreux pays, mais plus fréquente dans les zones à faible couverture vaccinale.",
-        "favorableEnvironment": "Particulièrement fréquente dans les régions où la couverture vaccinale est insuffisante."
+        "description": "Infection virale avec éruption cutanée et symptômes respiratoires.",
+        "symptoms": "Fièvre, éruptions cutanées, toux, conjonctivite.",
+        "countries": "Mondialement, plus fréquente dans les zones à faible couverture vaccinale.",
+        "favorableEnvironment": "Zones avec faible couverture vaccinale."
     },
     "data_final_schistosomiase": {
         "name": "Schistosomiase",
-        "description": "Maladie parasitaire transmise par des vers, souvent liée à l'eau douce, qui peut affecter divers organes.",
-        "countries": "Présente en Afrique, Asie, Amérique latine.",
-        "favorableEnvironment": "Zones avec des étangs ou rivières stagnantes."
+        "description": "Maladie parasitaire liée à l'eau douce.",
+        "symptoms": "Fièvre, douleurs abdominales, sang dans les urines ou selles.",
+        "countries": "Afrique, Asie, Amérique latine.",
+        "favorableEnvironment": "Zones avec eaux stagnantes."
     },
     "data_final_trypanosomiase": {
         "name": "Trypanosomiase",
-        "description": "Maladie parasitaire transmise par la mouche tsé-tsé, pouvant affecter le système nerveux.",
-        "countries": "Présente en Afrique subsaharienne.",
-        "favorableEnvironment": "Zones rurales et forestières où vivent les mouches tsé-tsé."
+        "description": "Maladie parasitaire transmise par la mouche tsé-tsé.",
+        "symptoms": "Fièvre, maux de tête, troubles du sommeil, confusion.",
+        "countries": "Afrique subsaharienne.",
+        "favorableEnvironment": "Zones rurales et forestières."
     },
     "data_final_virus": {
         "name": "Virus",
-        "description": "Maladies virales diverses, souvent transmises par des insectes ou des animaux.",
-        "countries": "Mondialement, selon le virus.",
+        "description": "Maladies virales diverses, souvent transmises par insectes ou animaux.",
+        "symptoms": "Varie selon le virus (fièvre, fatigue, douleurs musculaires...).",
+        "countries": "Mondialement.",
         "favorableEnvironment": "Environnements où le vecteur du virus est présent."
     },
     "data_final_zik": {
         "name": "Zika",
-        "description": "Le virus Zika est transmis par les moustiques et peut entraîner des malformations congénitales chez les nouveau-nés.",
-        "countries": "Présente dans les régions tropicales, particulièrement en Amérique latine et Asie.",
-        "favorableEnvironment": "Les régions humides où les moustiques Aedes sont abondants."
+        "description": "Maladie virale transmise par les moustiques Aedes.",
+        "symptoms": "Fièvre modérée, éruptions cutanées, douleurs articulaires, conjonctivite.",
+        "countries": "Amérique latine, Asie, Afrique.",
+        "favorableEnvironment": "Zones humides où les moustiques Aedes sont présents."
     },
     "paludisme": {
         "name": "Paludisme",
-        "description": "Le paludisme est une maladie infectieuse transmise par les moustiques, causée par des parasites du genre Plasmodium.",
-        "countries": "Présente en Afrique subsaharienne, Asie et certaines parties de l'Amérique latine.",
-        "favorableEnvironment": "Les zones tropicales où les moustiques du genre Anopheles prolifèrent."
+        "description": "Maladie infectieuse causée par le parasite Plasmodium.",
+        "symptoms": "Fièvre récurrente, frissons, sueurs, maux de tête, anémie.",
+        "countries": "Afrique subsaharienne, Asie, Amérique latine.",
+        "favorableEnvironment": "Zones tropicales avec moustiques Anopheles."
     }
 }
 
@@ -159,6 +174,7 @@ def upload_image():
     disease_info = disease_explanation.get(predicted_label, {
         "name": "Inconnu",
         "description": "Aucune information disponible.",
+        "symptoms": "Non spécifié",  # Ajoutez les symptômes ici
         "countries": "Non spécifié",
         "favorableEnvironment": "Non spécifié"
     })
