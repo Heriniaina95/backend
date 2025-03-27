@@ -189,33 +189,23 @@ def upload_image():
     })
 
 # Charger les données CSV
-data = pd.read_csv("data/donnees_symptomepays.csv")
-unique_countries = data['pays'].unique().tolist()
-
-# Catégorisation des pays par continent
-continents = {
-    "Afrique": ["Afrique", "Afrique centrale", "Afrique du Sud", "Angola", "Bénin", "Burkina Faso", "Burundi", "Cameroun", "Cap-Vert", "Centrafrique", "Comores", "Congo", "Côte d’Ivoire", "Djibouti", "Egypte", "Érythrée", "Éthiopie", "Gabon", "Gambie", "Ghana", "Guinée", "Guinée-Bissau", "Kenya", "Liberia", "Libéria", "Madagascar", "Mali", "Mauritanie", "Mozambique", "Namibie", "Niger", "Nigeria", "Ouganda", "République centrafricaine", "République Démocratique du Congo", "Rwanda", "Sao Tomé et Principe", "Sénégal", "Seychelles", "Sierra Leone", "Somalie", "Soudan", "Tanzanie", "Tchad", "Togo", "Zambie", "Zimbabwe"],
-    "Asie": ["Afghanistan", "Arabie Saoudite", "Bangladesh", "Bhoutan", "Brunei", "Cambodge", "Chine", "Hong-Kong", "Inde", "Indonésie", "Iran", "Japon", "Laos", "Malaisie", "Maldives", "Myanmar", "Népal", "Oman", "Pakistan", "Philippines", "Singapour", "Sri Lanka", "Taïwan", "Thaïlande", "Vietnam", "Yemen"],
-    "Europe": ["Allemagne", "France", "Italie", "Pays-Bas", "Espagne", "Royaume-Uni", "Yougoslavie"],
-    "Amérique du Nord": ["États-Unis", "Canada", "Mexique"],
-    "Amérique Centrale": ["Belize", "Costa Rica", "Cuba", "Guadeloupe", "Guatemala", "Honduras", "Nicaragua", "Panama", "République Dominicaine", "Salvador"],
-    "Amérique du Sud": ["Argentine", "Bolivie", "Brésil", "Chili", "Colombie", "Équateur", "Guyana", "Paraguay", "Pérou", "Suriname", "Uruguay", "Venezuela"],
-    "Océanie": ["Australie", "Fidji", "Nouvelle-Zélande", "Papouasie", "Samoa", "Tonga", "Vanuatu"],
-    "Moyen-Orient": ["Arabie Saoudite", "Émirats Arabes Unis", "Iran", "Irak", "Israël", "Jordanie", "Liban", "Oman", "Qatar", "Syrie", "Turquie", "Yémen"],
-    "Autres": ["inconnu", "le bassin méditerranéen", "Asie centrale", "Pacifique Sud"]
-}
+data = pd.read_csv("data/donnees_symptomes.csv")
 
 # Préparation des données pour la similarité cosinus
 def prepare_data_for_similarity(data):
     # Supposons que les colonnes de symptômes sont nommées 'symptome01', 'symptome02', etc.
     symptom_columns = [f"symptome{str(i).zfill(2)}" for i in range(1, 15)]
+    
+    # Vérifier si les colonnes existent
+    symptom_columns = [col for col in symptom_columns if col in data.columns]
+
     X = data[symptom_columns].fillna(0).values
 
     # Encodage des étiquettes de maladies
     label_encoder = LabelEncoder()
     y_encoded = label_encoder.fit_transform(data['maladie'])
 
-    return X, y_encoded, label_encoder
+    return X, y_encoded, label_encoder, symptom_columns
 
 # Fonction pour prédire la maladie basée sur la similarité des symptômes
 def predire_maladie(symptomes_patient, X, y_encoded, label_encoder):
@@ -235,63 +225,46 @@ def predire_maladie(symptomes_patient, X, y_encoded, label_encoder):
     return maladie_predite[0]
 
 # Préparer les données pour la similarité
-X, y_encoded, label_encoder = prepare_data_for_similarity(data)
+X, y_encoded, label_encoder, symptom_columns = prepare_data_for_similarity(data)
 
 @app.route("/predict-disease", methods=["POST"])
 def predict_disease():
-    """ Predict a disease based on the provided symptoms and country """
+    """ Prédit une maladie en fonction des symptômes fournis """
     received_data = request.json
     symptoms = received_data.get("symptoms", [])
-    country = received_data.get("country", "")
 
-    print("Received symptoms:", symptoms)  # Add this log
-    print("Received country:", country)  # Add this log
-
-    if not symptoms or not country:
-        return jsonify({"error": "Please provide both symptoms and country"}), 400
-
-    if country not in unique_countries:
-        return jsonify({"error": f"The country '{country}' is not valid"}), 400
+    if not symptoms:
+        return jsonify({"error": "Veuillez fournir les symptômes"}), 400
 
     valid_symptoms = get_symptoms_list()
+
     for symptom in symptoms:
         if symptom not in valid_symptoms:
-            return jsonify({"error": f"The symptom '{symptom}' is not valid"}), 400
+            return jsonify({"error": f"Le symptôme '{symptom}' n'est pas valide"}), 400
 
-    # Convert symptoms to binary vector
-    symptom_vector = [1 if symptom in symptoms else 0 for symptom in valid_symptoms]
+    # Convertir les symptômes en vecteur binaire
+    symptom_vector = [1 if symptom in symptoms else 0 for symptom in symptom_columns]
 
-    # Predict the disease
+    # Prédire la maladie
     predicted_disease = predire_maladie(symptom_vector, X, y_encoded, label_encoder)
 
     return jsonify({"predicted_disease": predicted_disease})
 
-@app.route("/countries", methods=["GET"])
-def get_countries():
-    """ Renvoie la liste des pays présents dans le dataset """
-    continent = request.args.get('continent')
-    if continent and continent in continents:
-        return jsonify({"countries": continents[continent]})
-    return jsonify({"countries": unique_countries})
-
-@app.route("/continents", methods=["GET"])
-def get_continents():
-    """ Renvoie la liste des continents et leurs pays associés """
-    return jsonify({"continents": continents})
 
 @app.route("/symptoms", methods=["GET"])
 def get_symptoms():
-    """ Renvoie la liste des symptômes disponibles dans le dataset par colonne """
+    """ Renvoie la liste des symptômes disponibles dans le dataset """
     return jsonify({"symptoms": get_symptoms_list()})
 
 def get_symptoms_list():
-    """ Récupère la liste des symptômes par colonne dans le dataset """
-    symptoms_data = {}
+    """ Récupère la liste des symptômes dans le dataset sous forme de liste unique """
+    symptoms_set = set()
     for i in range(1, 15):
         col = f"symptome{str(i).zfill(2)}"
         if col in data.columns:
-            symptoms_data[col] = data[col].dropna().unique().tolist()
-    return symptoms_data
+            symptoms_set.update(data[col].dropna().unique().tolist())
+    
+    return list(symptoms_set)
 
 if __name__ == '__main__':
     app.run(debug=True)
