@@ -23,7 +23,7 @@ except Exception as e:
     print(f"❌ Erreur lors du chargement du modèle: {e}")
     exit(1)
 
-# Classes (Modifier selon ton dataset)
+# Classes (Modifier selon votre dataset)
 classes = [
     "data_final_brucellose", "data_final_chikungunya", "data_final_dengue",
     "data_final_fievrehemoragique", "data_final_fievrejaune", "data_final_filariose",
@@ -178,7 +178,7 @@ def upload_image():
     disease_info = disease_explanation.get(predicted_label, {
         "name": "Inconnu",
         "description": "Aucune information disponible.",
-        "symptoms": "Non spécifié",  # Ajoutez les symptômes ici
+        "symptoms": "Non spécifié",
         "countries": "Non spécifié",
         "favorableEnvironment": "Non spécifié"
     })
@@ -195,11 +195,12 @@ data = pd.read_csv("data/donnees_symptomes.csv")
 def prepare_data_for_similarity(data):
     # Supposons que les colonnes de symptômes sont nommées 'symptome01', 'symptome02', etc.
     symptom_columns = [f"symptome{str(i).zfill(2)}" for i in range(1, 15)]
-    
+
     # Vérifier si les colonnes existent
     symptom_columns = [col for col in symptom_columns if col in data.columns]
 
-    X = data[symptom_columns].fillna(0).values
+    # Remplacer 'inconnu' par 0 et les autres valeurs par 1
+    X = data[symptom_columns].applymap(lambda x: 0 if x == 'inconnu' else 1).values
 
     # Encodage des étiquettes de maladies
     label_encoder = LabelEncoder()
@@ -208,7 +209,7 @@ def prepare_data_for_similarity(data):
     return X, y_encoded, label_encoder, symptom_columns
 
 # Fonction pour prédire la maladie basée sur la similarité des symptômes
-def predire_maladie(symptomes_patient, X, y_encoded, label_encoder):
+def predire_maladie(symptomes_patient, X, y_encoded, label_encoder, symptom_columns):
     # Vérifier que symptomes_patient a le même nombre de caractéristiques que X
     if len(symptomes_patient) != X.shape[1]:
         raise ValueError("Le nombre de symptômes du patient doit être égal au nombre de caractéristiques dans X.")
@@ -246,10 +247,9 @@ def predict_disease():
     symptom_vector = [1 if symptom in symptoms else 0 for symptom in symptom_columns]
 
     # Prédire la maladie
-    predicted_disease = predire_maladie(symptom_vector, X, y_encoded, label_encoder)
+    predicted_disease = predire_maladie(symptom_vector, X, y_encoded, label_encoder, symptom_columns)
 
     return jsonify({"predicted_disease": predicted_disease})
-
 
 @app.route("/symptoms", methods=["GET"])
 def get_symptoms():
@@ -263,7 +263,7 @@ def get_symptoms_list():
         col = f"symptome{str(i).zfill(2)}"
         if col in data.columns:
             symptoms_set.update(data[col].dropna().unique().tolist())
-    
+
     return list(symptoms_set)
 
 if __name__ == '__main__':
