@@ -266,5 +266,129 @@ def get_symptoms_list():
 
     return list(symptoms_set)
 
+# Données simulées (à remplacer par une base de données réelle)
+mesures = {
+    "Peste bubonique": [
+        "Consultation médicale immédiate : En cas de contact avec un patient pesteux qui tousse, consulter un médecin pour obtenir des antibiotiques en mesure préventive.",
+        "Isolement : Les patients atteints de peste pulmonaire doivent être isolés pour éviter la propagation de la maladie.",
+        "Traitement antibiotique : Administrer des antibiotiques appropriés dès que possible.",
+        "Précautions standard : Porter des équipements de protection individuelle (EPI).",
+        "Surveillance des contacts : Identifier et suivre les proches contacts.",
+        "Hygiène et assainissement : Appliquer des mesures de lutte contre les vecteurs."
+    ],
+    "Peste pulmonaire": [
+        "Consultation médicale immédiate : En cas de contact avec un patient pesteux qui tousse, consulter un médecin pour obtenir des antibiotiques en mesure préventive.",
+        "Isolement : Les patients atteints de peste pulmonaire doivent être isolés pour éviter la propagation de la maladie.",
+        "Traitement antibiotique : Administrer des antibiotiques appropriés dès que possible.",
+        "Précautions standard : Porter des équipements de protection individuelle (EPI).",
+        "Surveillance des contacts : Identifier et suivre les proches contacts.",
+        "Hygiène et assainissement : Appliquer des mesures de lutte contre les vecteurs."
+    ],
+    "Peste septicémique": [
+        "Consultation médicale immédiate : En cas de contact avec un patient pesteux qui tousse, consulter un médecin pour obtenir des antibiotiques en mesure préventive.",
+        "Isolement : Les patients atteints de peste pulmonaire doivent être isolés pour éviter la propagation de la maladie.",
+        "Traitement antibiotique : Administrer des antibiotiques appropriés dès que possible.",
+        "Précautions standard : Porter des équipements de protection individuelle (EPI).",
+        "Surveillance des contacts : Identifier et suivre les proches contacts.",
+        "Hygiène et assainissement : Appliquer des mesures de lutte contre les vecteurs."
+    ],
+    "Schistosomiase urogénitale": [
+        "Traitement médicamenteux : Le praziquantel est le traitement de choix.",
+        "Suivi médical : Examen de suivi recommandé 1 à 2 mois après le traitement.",
+        "Prévention : Éviter le contact avec des eaux douces contaminées.",
+        "Éducation sanitaire : Sensibiliser à l'importance du dépistage précoce."
+    ],
+    "Trypanosoma brucei gambiense": [
+        "Traitement médicamenteux : La pentamidine est utilisée au premier stade de la maladie. Pour le deuxième stade, des médicaments comme l'éflornithine ou le nifurtimox-éflornithine sont utilisés.",
+        "Suivi médical : Un suivi régulier est nécessaire pour surveiller l'évolution de la maladie et ajuster le traitement si nécessaire.",
+        "Prévention : Éviter les piqûres de mouches tsé-tsé en portant des vêtements protecteurs et en utilisant des répulsifs. Éliminer les habitats de reproduction des mouches tsé-tsé.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "Trypanosoma brucei rhodesiense": [
+        "Traitement médicamenteux : Le suramin est utilisé au premier stade de la maladie, tandis que la mélarsoprol est utilisée au deuxième stade.",
+        "Suivi médical : Un suivi régulier est nécessaire pour surveiller l'évolution de la maladie et ajuster le traitement si nécessaire.",
+        "Prévention : Éviter les piqûres de mouches tsé-tsé en portant des vêtements protecteurs et en utilisant des répulsifs. Éliminer les habitats de reproduction des mouches tsé-tsé.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "Rougeole": [
+        "Vaccination : La vaccination est la mesure la plus efficace pour prévenir la rougeole. Deux doses du vaccin ROR (Rougeole-Oreillons-Rubéole) sont recommandées.",
+        "Isolement : Les personnes atteintes de rougeole doivent être isolées pendant la période de contagiosité pour éviter la propagation de la maladie.",
+        "Hygiène : Se laver fréquemment les mains et éviter de partager des objets personnels avec des personnes infectées.",
+        "Vitamine A : Administrer des suppléments de vitamine A aux enfants atteints de rougeole pour réduire le risque de complications."
+    ],
+    "Zika": [
+        "Prévention des piqûres de moustiques : Utiliser des répulsifs, porter des vêtements couvrants et dormir sous des moustiquaires imprégnées d'insecticide.",
+        "Élimination des gîtes larvaires : Éliminer les eaux stagnantes autour des habitations pour réduire la reproduction des moustiques.",
+        "Protection sexuelle : Utiliser des préservatifs pour prévenir la transmission sexuelle du virus Zika.",
+        "Surveillance médicale : Les femmes enceintes doivent être surveillées de près en raison du risque de microcéphalie chez le fœtus."
+    ],
+    "Chikungunya": [
+        "Prévention des piqûres de moustiques : Utiliser des répulsifs, porter des vêtements couvrants et dormir sous des moustiquaires imprégnées d'insecticide.",
+        "Élimination des gîtes larvaires : Éliminer les eaux stagnantes autour des habitations pour réduire la reproduction des moustiques.",
+        "Traitement symptomatique : Repos, hydratation et utilisation d'antalgiques pour soulager les symptômes.",
+        "Surveillance médicale : Suivi médical pour détecter et traiter les complications potentielles."
+    ],
+    "La filariose lymphatique": [
+        "Traitement médicamenteux : L'ivermectine, l'albendazole et la doxycycline sont utilisés pour traiter la filariose lymphatique.",
+        "Prévention : Utiliser des répulsifs et dormir sous des moustiquaires imprégnées d'insecticide pour éviter les piqûres de moustiques.",
+        "Hygiène personnelle : Maintenir une bonne hygiène corporelle pour prévenir les infections secondaires.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "La leishmaniose cutanée": [
+        "Traitement médicamenteux : Les antimoniés pentavalents sont le traitement de choix. Les alternatives incluent l'amphotéricine B et la miltéfosine.",
+        "Prévention : Utiliser des répulsifs et dormir sous des moustiquaires imprégnées d'insecticide pour éviter les piqûres de phlébotomes.",
+        "Hygiène personnelle : Maintenir une bonne hygiène corporelle pour prévenir les infections secondaires.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "Leishmaniose cutanéo-muqueuse": [
+        "Traitement médicamenteux : Les antimoniés pentavalents sont le traitement de choix. Les alternatives incluent l'amphotéricine B et la miltéfosine.",
+        "Prévention : Utiliser des répulsifs et dormir sous des moustiquaires imprégnées d'insecticide pour éviter les piqûres de phlébotomes.",
+        "Hygiène personnelle : Maintenir une bonne hygiène corporelle pour prévenir les infections secondaires.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "Schistosomiase intestinale": [
+        "Traitement médicamenteux : Le praziquantel est le traitement de choix pour la schistosomiase intestinale.",
+        "Suivi médical : Un examen de suivi est recommandé 1 à 2 mois après le traitement pour s'assurer de la guérison du patient. Si des œufs sont toujours présents, le traitement peut être réitéré.",
+        "Prévention : Éviter le contact avec des eaux douces contaminées par les larves du parasite. Utiliser des installations sanitaires adéquates et avoir accès à de l'eau potable.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur l'importance du dépistage précoce et du traitement rapide pour éviter la progression vers des formes sévères de la maladie."
+    ],
+    "Virus Marburg": [
+        "Isolement : Les patients atteints du virus Marburg doivent être isolés pour éviter la propagation de la maladie.",
+        "Traitement symptomatique : Hydratation, maintien de l'équilibre électrolytique et traitement des symptômes spécifiques.",
+        "Précautions standard : Porter des équipements de protection individuelle (EPI) et appliquer des mesures de précaution pour le personnel soignant en contact avec des patients atteints du virus Marburg.",
+        "Surveillance des contacts : Identifier et suivre les proches contacts des patients atteints du virus Marburg et leur administrer une surveillance médicale."
+    ],
+    "Paludisme": [
+        "Traitement médicamenteux : Les antipaludéens comme l'artémisinine ou la quinine sont utilisés pour traiter le paludisme.",
+        "Prévention : Utiliser des moustiquaires imprégnées d'insecticide et des répulsifs pour éviter les piqûres de moustiques. Prendre des médicaments prophylactiques lors de voyages dans des zones endémiques.",
+        "Hygiène personnelle : Maintenir une bonne hygiène corporelle pour prévenir les infections secondaires.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "Fièvre jaune": [
+        "Vaccination : La vaccination est la mesure la plus efficace pour prévenir la fièvre jaune. Une dose unique du vaccin confère une immunité à vie.",
+        "Prévention des piqûres de moustiques : Utiliser des répulsifs, porter des vêtements couvrants et dormir sous des moustiquaires imprégnées d'insecticide.",
+        "Élimination des gîtes larvaires : Éliminer les eaux stagnantes autour des habitations pour réduire la reproduction des moustiques.",
+        "Surveillance médicale : Les voyageurs se rendant dans des zones endémiques doivent être vaccinés au moins 10 jours avant leur départ."
+    ],
+    "La leishmaniose viscérale": [
+        "Traitement médicamenteux : Les antimoniés pentavalents sont le traitement de choix. Les alternatives incluent l'amphotéricine B et la miltéfosine.",
+        "Hygiène personnelle : Maintenir une bonne hygiène corporelle pour prévenir les infections secondaires.",
+        "Prévention : Utiliser des répulsifs et dormir sous des moustiquaires imprégnées d'insecticide pour éviter les piqûres de phlébotomes.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ],
+    "Onchocercose": [
+        "Traitement médicamenteux : L'ivermectine est le traitement de choix pour l'onchocercose.",
+        "Prévention : Utiliser des répulsifs et porter des vêtements protecteurs pour éviter les piqûres de simulies.",
+        "Hygiène personnelle : Maintenir une bonne hygiène corporelle pour prévenir les infections secondaires.",
+        "Éducation sanitaire : Sensibiliser les populations à risque sur les mesures de prévention et l'importance du dépistage précoce."
+    ]
+}
+
+@app.route('/get_measurements', methods=['GET'])
+def get_measurements():
+    disease = request.args.get('disease')  # Récupérer la maladie prédite depuis les paramètres de la requête
+    measures = mesures.get(disease, [])  # Récupérer les mesures pour la maladie prédite
+    return jsonify({"data": measures}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
